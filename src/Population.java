@@ -30,7 +30,7 @@ public class Population {
 
     /*  Removes any networks that are behind the current max fitness level
 
-            - Aims to keep the population at the two best candidates.
+            - Aims to keep the population to the three best candidates.
                 - if there are too many networks of the same fitness, pruning will not be beneficial.
                 - Pruned networks are cleared of reference data
 
@@ -119,7 +119,9 @@ public class Population {
 
         Sort();
         for(int i = 0; i<attempts; i++){
-            NewGeneration();
+            if(!NewGeneration()){
+                System.err.println("The population: "+this.name+", has failed to breed at step "+i);
+            }
         }
         prune();
 
