@@ -5,7 +5,7 @@ import java.util.Random;
 public class Population {
 
     public ArrayList<Network> population = new ArrayList<>();
-    public int populationLimit = 100;
+    public int populationLimit = 2000;
     public float mutationRate = 0.01123f;
     public boolean prune = true, detailedDescriptions;
     public String name;
@@ -60,7 +60,6 @@ public class Population {
                     population.remove(i.intValue()-rm);
                     rm++;
                 }
-                prune();
             }
         }
     }
@@ -124,42 +123,66 @@ public class Population {
 
         Sort();
         for(int i = 0; i<attempts; i++){
-            if(!NewGeneration()){
-                System.err.println("The population: "+this.name+", has failed to breed at step "+i);
+            int r = NewGeneration(i,attempts);
+            switch (r){
+
+                case -1:
+                    System.err.println("The population must have at least 2 networks, in order to breed!");
+                    break;
+
+                case -2:
+                    System.err.println("Incompatible networks can't be bred!");
+                    break;
+
+                case -3:
+                    break;
+
+                default:
+
             }
+
+
         }
         prune();
 
     }
 
-    //  Can be tested for failure
-    public boolean NewGeneration(){
+    public int NewGeneration(int tries, int total){
 
-        System.out.println("Pop Size: "+population.size());
+        System.out.println(tries+"/"+total);
+        int genReturn = NewGeneration();
         if(population.size() >= populationLimit){
             prune();
         }
+        return genReturn;
+
+    }
+
+    //  Can be tested for failure
+    public int NewGeneration(){
 
         if(population.size() < 2){
-            return false;
+            return -1;
         }
 
         int p1 = randomParent(), p2 = randomParent();
         if(p1 == -1 || p2 == -1){
-            return false;
+            return -2;
         }
 
         Network net1 = population.get(p1).clone();
         Network net2 = population.get(p2).clone();
 
         Network spawn = breed(net1,net2);
+        int fspawn = spawn.getFitness();
+        boolean spawnpass = fspawn >=  this.Fittest().getFitness();
 
-        if(spawn != null)
+        if(spawn != null && spawnpass)
             population.add(0,spawn);
         else
-            return false;
+            return -3;
 
-        return true;
+        return 1;
 
     }
 

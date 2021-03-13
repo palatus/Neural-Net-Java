@@ -23,7 +23,7 @@ public class tester {
 
         };
 
-        int generations = 5000;
+        int generations = 50000;
         Population pop = new Population("AlbÖt");
         pop.populate(new int[][]{{100,40,100},{100,10,100}}, testData[2]);
         pop.detailedDescriptions = true;
@@ -34,7 +34,7 @@ public class tester {
         pop.trim();
         //pop.Describe();
 
-        System.out.println(pop.name+" Testing Data | "+generations+" Generations\n");
+        System.out.println("\n"+pop.name+" Testing Data | "+generations+" Generations\n");
 
         int i = 0, score = 0;
         for(double[] d : testData){

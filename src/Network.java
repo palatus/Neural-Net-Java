@@ -64,7 +64,6 @@ public class Network implements Comparable<Network> {
         buildType = null;
         id = null;
         trainType = null;
-        System.gc();
 
     }
 
