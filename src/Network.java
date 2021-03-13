@@ -22,7 +22,7 @@ public class Network implements Comparable<Network> {
 
     }
 
-    private HashMap<Integer, NGroup> neurons = new HashMap<>();
+    private HashMap<Integer, NGroup> neuronGroups = new HashMap<>();
     private Type buildType;
     private String id;
     private int fitness;
@@ -45,7 +45,7 @@ public class Network implements Comparable<Network> {
 
         Network nn = new Network(this.buildType,this.trainType);
 
-        for(NGroup n: this.neurons.values()){
+        for(NGroup n: this.neuronGroups.values()){
             nn.addGroup(n.clone());
         }
 
@@ -53,12 +53,19 @@ public class Network implements Comparable<Network> {
 
     }
     public void dump(){
-        for(NGroup n: neurons.values()){
+
+        for(NGroup n: neuronGroups.values()){
             n.setNext(null);
             n.setPrevious(null);
             n.setNeurons(null);
         }
-        neurons = null;
+
+        neuronGroups = null;
+        buildType = null;
+        id = null;
+        trainType = null;
+        System.gc();
+
     }
 
     /*
@@ -100,7 +107,7 @@ public class Network implements Comparable<Network> {
             addGroup(nnew);
         }
 
-        for(NGroup ng : neurons.values()){
+        for(NGroup ng : neuronGroups.values()){
             if(ng.getLevel() == level)
                 ng.appendNeuron(n);
         }
@@ -128,13 +135,13 @@ public class Network implements Comparable<Network> {
 
         for (int i = 0; i<ng.getLevel(); i++){
             Integer iint = Integer.valueOf(i);
-            NGroup cGroup = neurons.get(iint);
+            NGroup cGroup = neuronGroups.get(iint);
             if(cGroup != null && cGroup.getLevel() == ng.getLevel()-1){
                 cGroup.linkNext(ng);
             }
         }
 
-        neurons.put(ng.getLevel(),ng);
+        neuronGroups.put(ng.getLevel(),ng);
     }
 
     public void Train()
@@ -145,11 +152,11 @@ public class Network implements Comparable<Network> {
     }
 
     public NGroup getGroup(Integer level){
-        return neurons.get(level);
+        return neuronGroups.get(level);
     }
 
     public int getHeight(){
-        return neurons.keySet().size();
+        return neuronGroups.keySet().size();
     }
 
     public double[] fireGroup(int level, double[] inputs){
@@ -181,7 +188,7 @@ public class Network implements Comparable<Network> {
 
         double[] previous = input;
 
-        for(NGroup n: neurons.values()){
+        for(NGroup n: neuronGroups.values()){
 
             previous = n.fire(previous);
 
@@ -214,8 +221,8 @@ public class Network implements Comparable<Network> {
     public void Describe(){
 
         System.out.println("Network Type: "+buildType);
-        System.out.println("Group Size: "+this.neurons.values().size()+"\n");
-        for(NGroup ng : neurons.values()){
+        System.out.println("Group Size: "+this.neuronGroups.values().size()+"\n");
+        for(NGroup ng : neuronGroups.values()){
             System.out.println("Group Level: "+ng.getLevel()+" - "+"Next: "+ng.getNext());
             for(Neuron n: ng.getNeurons()){
                 System.out.println(n.toString());
@@ -231,7 +238,7 @@ public class Network implements Comparable<Network> {
     }
 
     public HashMap<Integer, NGroup> getNeurons(){
-        return this.neurons;
+        return this.neuronGroups;
     }
 
     public boolean compatible(Network other){

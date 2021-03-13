@@ -23,11 +23,12 @@ public class tester {
 
         };
 
-        int generations = 20000;
+        int generations = 5000;
         Population pop = new Population("AlbÖt");
         pop.populate(new int[][]{{100,40,100},{100,10,100}}, testData[2]);
-        pop.NewGeneration(generations);
         pop.detailedDescriptions = true;
+        pop.NewGeneration(generations);
+
 
         pop.prune();
         pop.trim();
@@ -43,7 +44,7 @@ public class tester {
                 score++;
                 System.out.println("| +1");
             } else {
-                System.out.println("|");
+                System.out.println("|  X");
             }
             i++;
         }

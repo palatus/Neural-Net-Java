@@ -5,7 +5,8 @@ import java.util.Random;
 public class Population {
 
     public ArrayList<Network> population = new ArrayList<>();
-    public float mutationRate = 0.01f;
+    public int populationLimit = 100;
+    public float mutationRate = 0.01123f;
     public boolean prune = true, detailedDescriptions;
     public String name;
 
@@ -40,6 +41,10 @@ public class Population {
     public void prune(){
 
         if(prune){
+
+            if(detailedDescriptions){
+                System.out.println("Pruning...");
+            }
 
             int max = Fittest().getFitness();
             int size = population.size()-1;
@@ -129,6 +134,11 @@ public class Population {
 
     //  Can be tested for failure
     public boolean NewGeneration(){
+
+        System.out.println("Pop Size: "+population.size());
+        if(population.size() >= populationLimit){
+            prune();
+        }
 
         if(population.size() < 2){
             return false;
@@ -276,7 +286,7 @@ public class Population {
         int nn = 1;
         for(Network net : population){
             System.out.print("\t|| "+name+" Neural Net "+nn+"\n");
-            if(net != null) {
+            //if(net != null) {
                 System.out.print("\t||");
                 System.out.print(" "+net + ": Fitness " + net.getFitness()+"\n ");
                 if(detailedDescriptions)
@@ -299,7 +309,7 @@ public class Population {
                     j++;
                 }
 
-            }
+            //}
             System.out.print("\n");
             nn++;
         }
